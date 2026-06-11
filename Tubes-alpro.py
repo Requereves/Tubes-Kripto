@@ -1,3 +1,4 @@
+
 aset = []
 
 saldo = 100000
@@ -84,7 +85,14 @@ def select_harga():
     print("Data diurutkan berdasarkan harga Tertinggi")
 
 def market_cap():
-    print("ini buat cek market cap pake insertion")
+    for i in range(1, len(aset)):
+        k = aset[i]
+        j = i - 1
+        #ngurutin dari Market Cap terbesar ke terkecil
+        while j >= 0 and aset[j]['market'] < k['market']:
+            aset[j + 1] = aset[j]
+            j -= 1
+        aset[j + 1] = k
 
 def jualaset():
     print("Jual aset (belum dibikin)")
@@ -154,3 +162,4 @@ while True:
         break
     else:
         print("Pilihan tidak ada")
+
