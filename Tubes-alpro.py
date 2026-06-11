@@ -7,6 +7,21 @@ riwayat_trans = []
 def ceksaldo():
     print(f"Saldo Kamu sekarang adalah: {saldo}")
 
+# TOP UP SALDO DOMPET (fitur baru)
+def topupsaldo(saldo_sekarang):
+    print("Top Up Dompet")
+    nominal = int(input("Mau top up saldo berapa? Rp "))
+    
+    if nominal > 0:
+        saldo_sekarang += nominal
+        print(f"Top up Rp {nominal} berhasil.")
+        print(f"Saldo kamu sekarang: Rp {saldo_sekarang}")
+        riwayat_trans.append(f"Top Up Saldo: +Rp {nominal}")
+    else:
+        print("Nominalnya ga valid, masukin angka yang bener ya.")
+        
+    return saldo_sekarang
+
 # CEK ASET / LIST ASET YANG ADA
 def cekaset():
     print("")
@@ -16,7 +31,6 @@ def cekaset():
         print(f"{i+1}. {aset[i]['nama']} ({aset[i]['simbol']})")
         print(f" Harga: {aset[i]['harga']}")
         print(f" Market Cap: {aset[i]['market']}")
-
 
 # BUAT NYARI NAMA ASET PAKE SEQUENTIAL
 def sequen_nama(cari_nama):
@@ -45,16 +59,15 @@ def cariaset():
             print("ASETNYA")
             print(f"Nama    :{aset[hasil]['nama']}")
             print(f"Simbol  :{aset[hasil]['simbol']}") 
-            print(f"Harga  :{aset[hasil]['harga']}") 
+            print(f"Harga   :{aset[hasil]['harga']}") 
             print(f"market  :{aset[hasil]['market']}") 
+        else:
+            print("Aset tidak ditemukan")
     else:
         print("Pilihan tidak ada")
         return
 
-    
     cekaset()
-
-
 
 # LOGIKA BUAT CARI ASET HARGA PAKE SELECTION SORT
 def select_harga():
@@ -70,19 +83,17 @@ def select_harga():
 
     print("Data diurutkan berdasarkan harga Tertinggi")
 
-
-
 def market_cap():
     print("ini buat cek market cap pake insertion")
 
 def jualaset():
-    print("Jual aset")
+    print("Jual aset (belum dibikin)")
 
 def beliaset():
-    print("Beli Aset")
+    print("Beli Aset (belum dibikin)")
 
 def tambahaset():
-    nama = input("Masukkan Nma Aset: ")
+    nama = input("Masukkan Nama Aset: ")
     simbol = input("Masukkan Simbol Aset: ")
     harga = int(input("Masukkan Harga Aset: "))
     market = int(input("Masukkan Harga Market: "))
@@ -99,7 +110,8 @@ def tambahaset():
 
 def riwayat():
     if len(riwayat_trans) == 0:
-        print("ga ada aset")
+        print("Belum ada transaksi nih.")
+    else:
         for i in riwayat_trans:
             print(i)
 
@@ -107,14 +119,15 @@ while True:
     print("")
     print("========================")
     print("MENU UTAMA")
-    print("1.Cek Saldo")
-    print("2.Cek Aset")
-    print("3.Jual Aset Kripto")
-    print("4.Beli Kripto")
-    print("5.Cek Riwayat")
-    print("6.Tambah Aset")
-    print("7.Cari Aset")
-    print("8.Keluar")
+    print("1. Cek Saldo")
+    print("2. Top Up Saldo")
+    print("3. Cek Aset")
+    print("4. Jual Aset Kripto")
+    print("5. Beli Kripto")
+    print("6. Cek Riwayat")
+    print("7. Tambah Aset")
+    print("8. Cari Aset")
+    print("9. Keluar")
     print("========================")
     print()
 
@@ -123,18 +136,20 @@ while True:
     if pil == 1:
         ceksaldo()
     elif pil == 2:
-        cekaset()
+        saldo = topupsaldo(saldo)
     elif pil == 3:
-        jualaset()
+        cekaset()
     elif pil == 4:
-        beliaset()
+        jualaset()
     elif pil == 5:
-        riwayat()
+        beliaset()
     elif pil == 6:
-        tambahaset()
+        riwayat()
     elif pil == 7:
-        cariaset()
+        tambahaset()
     elif pil == 8:
+        cariaset()
+    elif pil == 9:
         print("BYEE")
         break
     else:
