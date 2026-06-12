@@ -1,5 +1,3 @@
-
-
 aset = []
 
 saldo = 100000
@@ -105,7 +103,11 @@ def tambahaset():
     nama = input("Masukkan Nama Aset: ")
     simbol = input("Masukkan Simbol Aset: ")
     harga = int(input("Masukkan Harga Aset: "))
+    if harga < 0:
+        print("Harga ga bs dibawah 0")
     market = int(input("Masukkan Harga Market: "))
+    if market < 0:
+        print("Harga market ga bisa dibawah 0")
 
     data_baru = {
         "nama": nama,
