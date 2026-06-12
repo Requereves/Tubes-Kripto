@@ -1,15 +1,16 @@
 aset = []
+portofolio = [] #Buat nyimpen koin user
 
-saldo = 100000
+saldo = 0
 riwayat_trans = []
 
 # CEK SALDO
 def ceksaldo():
-    print(f"Saldo Kamu sekarang adalah: {saldo}")
+    print(f"Saldo Kamu sekarang adalah: Rp {saldo}")
 
 # TOP UP SALDO DOMPET (fitur baru)
 def topupsaldo(saldo_sekarang):
-    print("Top Up Dompet")
+    print("\nTop Up Dompet")
     nominal = int(input("Mau top up saldo berapa? Rp "))
     
     if nominal > 0:
@@ -25,12 +26,15 @@ def topupsaldo(saldo_sekarang):
 # CEK ASET / LIST ASET YANG ADA
 def cekaset():
     print("")
-    print("Daftar Coin/Aset")
+    print("Daftar Coin/Aset di Market")
 
-    for i in range(len(aset)):
-        print(f"{i+1}. {aset[i]['nama']} ({aset[i]['simbol']})")
-        print(f" Harga: {aset[i]['harga']}")
-        print(f" Market Cap: {aset[i]['market']}")
+    if len(aset) == 0:
+        print("Belum ada aset, tambah dulu di menu 7.")
+    else:
+        for i in range(len(aset)):
+            print(f"{i+1}. {aset[i]['nama']} ({aset[i]['simbol']})")
+            print(f" Harga: Rp {aset[i]['harga']}")
+            print(f" Market Cap: {aset[i]['market']}")
 
 # BUAT NYARI NAMA ASET PAKE SEQUENTIAL
 def sequen_nama(cari_nama):
@@ -41,7 +45,7 @@ def sequen_nama(cari_nama):
 
 # BUAT CARI ASET NYA SESUAI HARGA / MARKET CAP
 def cariaset():
-    print("Cek aset kripto")
+    print("\nCek aset kripto")
     print("1. Harga")
     print("2. Market Cap")
     print("3. Nama Aset")
@@ -49,25 +53,25 @@ def cariaset():
 
     if pilihan == '1':
         select_harga()
+        cekaset()
     elif pilihan == '2':
         market_cap()
+        cekaset()
     elif pilihan == '3':
         nama = input("Masukkan nama yang yang mau dicari: ")
         hasil = sequen_nama(nama)
 
         if hasil != -1:
-            print("ASETNYA")
+            print("\nASETNYA")
             print(f"Nama    :{aset[hasil]['nama']}")
             print(f"Simbol  :{aset[hasil]['simbol']}") 
-            print(f"Harga   :{aset[hasil]['harga']}") 
-            print(f"market  :{aset[hasil]['market']}") 
+            print(f"Harga   :Rp {aset[hasil]['harga']}") 
+            print(f"Market  :{aset[hasil]['market']}") 
         else:
             print("Aset tidak ditemukan")
     else:
         print("Pilihan tidak ada")
         return
-
-    cekaset()
 
 # LOGIKA BUAT CARI ASET HARGA PAKE SELECTION SORT
 def select_harga():
@@ -81,23 +85,72 @@ def select_harga():
                 idx = j
         aset[i], aset[idx] = aset[idx], aset[i]
 
-    print("Data diurutkan berdasarkan harga Tertinggi")
+    print("\nData diurutkan berdasarkan harga Tertinggi")
 
+# LOGIKA BUAT CARI MARKET CAP PAKE INSERTION SORT
 def market_cap():
     for i in range(1, len(aset)):
         k = aset[i]
         j = i - 1
-        #ngurutin dari Market Cap terbesar ke terkecil
+        # ngurutin dari Market Cap terbesar ke terkecil
         while j >= 0 and aset[j]['market'] < k['market']:
             aset[j + 1] = aset[j]
             j -= 1
         aset[j + 1] = k
+    
+    print("\nData diurutkan berdasarkan Market Cap Tertinggi")
 
 def jualaset():
     print("Jual aset (belum dibikin)")
 
-def beliaset():
-    print("Beli Aset (belum dibikin)")
+# FITUR BELI ASET (fitur baru)
+def beliaset(saldo_sekarang):
+    print("\nBeli Aset Kripto")
+    if len(aset) == 0:
+        print("Belum ada koin di market. Tambah aset dulu dari menu 7.")
+        return saldo_sekarang
+        
+    cekaset()
+    nama_beli = input("\nMasukkan nama koin yang mau dibeli: ")
+    hasil = sequen_nama(nama_beli)
+    
+    if hasil != -1:
+        harga_koin = aset[hasil]['harga']
+        print(f"Harga 1 keping {aset[hasil]['nama']}: Rp {harga_koin}")
+        jumlah = int(input("Mau beli berapa keping? "))
+        
+        total_bayar = harga_koin * jumlah
+        
+        # Cek saldony cukup/ga buat beli
+        if saldo_sekarang >= total_bayar:
+            saldo_sekarang -= total_bayar
+            print(f"Sip! Kamu berhasil beli {jumlah} {aset[hasil]['simbol']} seharga Rp {total_bayar}.")
+            print(f"Sisa saldo sekarang: Rp {saldo_sekarang}")
+            
+            # Catet transaksinya
+            riwayat_trans.append(f"Beli Aset: {jumlah} {aset[hasil]['nama']} (-Rp {total_bayar})")
+            
+            # Masukin koinnya ke portofolio user
+            sudah_punya = False
+            for p in portofolio:
+                if p['nama'].lower() == aset[hasil]['nama'].lower():
+                    p['jumlah'] += jumlah
+                    sudah_punya = True
+                    break
+            
+            # bikin data baru di portofolio kalo belum punya
+            if not sudah_punya:
+                portofolio.append({
+                    "nama": aset[hasil]['nama'],
+                    "simbol": aset[hasil]['simbol'],
+                    "jumlah": jumlah
+                })
+        else:
+            print(f"saldonya ga cukup oi. Total belanjanya Rp {total_bayar}, saldo kamu cuma Rp {saldo_sekarang}.")
+    else:
+        print("Koin ga ketemu, pastikan namanya sesuai yang ada di daftar ya.")
+        
+    return saldo_sekarang
 
 def tambahaset():
     nama = input("Masukkan Nama Aset: ")
@@ -146,6 +199,11 @@ while True:
 
     if pil == 1:
         ceksaldo()
+        # Nampilin portofolio koin yang udah dibeli user
+        if len(portofolio) > 0:
+            print("Koin yang kamu punya:")
+            for p in portofolio:
+                print(f"- {p['jumlah']} keping {p['nama']} ({p['simbol']})")
     elif pil == 2:
         saldo = topupsaldo(saldo)
     elif pil == 3:
@@ -153,7 +211,7 @@ while True:
     elif pil == 4:
         jualaset()
     elif pil == 5:
-        beliaset()
+        saldo = beliaset(saldo)
     elif pil == 6:
         riwayat()
     elif pil == 7:
@@ -165,4 +223,3 @@ while True:
         break
     else:
         print("Pilihan tidak ada")
-
